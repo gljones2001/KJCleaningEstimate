@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Cleaning Estimator</title>
+    <style type="text/css">
+      body {
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 40em;
+        width: 88%;
+      }
+      label,
+      input,
+      textarea {
+        width: 100%;
+      }
+      label {
+        font-weight: bold;
+      }
+      input,
+      textarea {
+        margin-bottom: 2em;
+      }
+      textarea {
+        height: 12em;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Form Saver</h1>
+    <form id="autosave">
+      <div>
+        <label for="name">Name</label>
+        <input type="text" id="name">
+      </div>
+      <div>
+        <label for="email">Email Address</label>
+        <input type="email" id="email">
+      </div>
+      <div>
+        <label for="notes">Notes</label>
+        <textarea id="notes"></textarea>
+      </div>
+      <button>Submit</button>
+    </form>
+    <script>
+      var inputs = document.querySelectorAll('input, textarea');
+      var saved = localStorage.getItem('formAutosaveData');
+      if(saved){
+        saved = JSON.parse(saved);
+        for(var i = 0; i < inputs.length; i++){
+          var val = saved[inputs[i].id];
+          if(!val) continue;
+          inputs[i].value = val;
+        }
+      }
+      document.addEventListener('input', function (event){
+        var saved = localStorage.getItem('formAutosaveData');
+        saved = saved ? JSON.parse(saved) : {};
+        saved[event.target.id] = event.target.value;
+        localStorage.setItem('formAutosaveData', JSON.stringify(saved));
+      }, false);
+      document.addEventListener('submit', function(event){
+        if (event.target.id === 'autosave'){
+          localStorage.setItem('formAutosaveData', '');
+        }
+      }, false);
+    </script>
+  </body>
+</html>
